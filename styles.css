@@ -22,10 +22,6 @@ h1 {
   color: rgba(132, 0, 16, 1);
 }
 
-/* .url__input:focus {
-    outline: 1px solid #840010;
-} */
-
 .result {
   background-color: darkgrey;
   padding: 2rem 1rem;
@@ -49,6 +45,7 @@ h1 {
   outline: none;
   border-color: lightgrey;
 }
+
 .url__input {
   color: white;
   outline-offset: 0;
