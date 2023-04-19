@@ -1,8 +1,5 @@
 # URL-Checker
 
-after cloning the repo,  
-run `npm i`
-
 to add the mock database, add a `db.json` file and with the following structure
 
 ```
@@ -14,4 +11,4 @@ to add the mock database, add a `db.json` file and with the following structure
 }
 ```
 
-start the mock database with `json-server --watch db.json`
+make sure to have `json-server` installed and start the mock database with `json-server --watch db.json`
