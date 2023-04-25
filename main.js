@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const urlInput = document.querySelector("#url-input");
   urlInput.addEventListener("input", (e) => {
-    throttledHandleInput(e.target.value);
+    handleInput(e.target.value);
   });
   urlInput.focus();
 });
@@ -16,30 +16,16 @@ const checkUrlFormat = (url) => {
   }
 };
 
-let timer;
-
 const handleInput = async (input) => {
   const resultField = document.querySelector("#result-field");
 
   let formatValid = checkUrlFormat(input);
   if (formatValid === true) {
-    let serverResponse = await queryServer(input);
-    if (serverResponse === false) {
-      resultField.innerText =
-        "The input is a valid url but could not be found in the database";
-      resultField.classList.remove("green");
-      resultField.classList.remove("red");
-      resultField.classList.add("yellow");
-    } else if (
-      serverResponse !== undefined &&
-      typeof serverResponse === "object"
-    ) {
-      resultField.innerText =
-        "The entered url is valid and points to a " + serverResponse.type;
-      resultField.classList.remove("red");
-      resultField.classList.remove("yellow");
-      resultField.classList.add("green");
-    }
+    resultField.innerText = "The input is a valid url";
+    resultField.classList.remove("yellow");
+    resultField.classList.remove("red");
+    resultField.classList.add("green");
+    await throttledDbResponse(input);
   } else {
     resultField.innerText = "The input is not a valid url";
     resultField.classList.remove("green");
@@ -74,7 +60,23 @@ const throttle = (fn, delay) => {
   };
 };
 
-const throttledHandleInput = throttle(handleInput, 2000);
+const dbResponse = async (input) => {
+  const resultField = document.querySelector("#result-field");
+  let serverResponse = await queryServer(input);
+  if (serverResponse === false) {
+    resultField.innerText += "  but could not be found in the database";
+    resultField.classList.remove("green");
+    resultField.classList.remove("red");
+    resultField.classList.add("yellow");
+  } else if (
+    serverResponse !== undefined &&
+    typeof serverResponse === "object"
+  ) {
+    resultField.innerText += "  and points to a " + serverResponse.type;
+  }
+};
+
+const throttledDbResponse = throttle(dbResponse, 2000);
 
 const queryServer = async (input) => {
   let result = false;
@@ -91,10 +93,3 @@ const queryServer = async (input) => {
   console.log("server called at " + now);
   return result;
 };
-
-// const throttledQueryServer = throttle(queryServer, 2000);
-
-// const throttledQueryServer = (input) => {
-//   clearTimeout(timer);
-//   timer = setTimeout(queryServer, 2000, input);
-// };
