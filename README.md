@@ -1,6 +1,8 @@
 # URL-Checker
 
-to add the mock database, add a `db.json` file and with the following structure
+### This app lets you check if the input text matches the format of a url and whether the url is present in the provided database.
+
+To add the mock database, add a `db.json` file and with the following structure
 
 ```
 {
@@ -10,5 +12,3 @@ to add the mock database, add a `db.json` file and with the following structure
     ]
 }
 ```
-
-make sure to have `json-server` installed and start the mock database with `json-server --watch db.json`
