@@ -64,7 +64,8 @@ const dbResponse = async (input) => {
   const resultField = document.querySelector("#result-field");
   let serverResponse = await queryServer(input);
   if (serverResponse === false) {
-    resultField.innerText += "  but could not be found in the database";
+    resultField.innerText =
+      "The input is a valid url but could not be found in the database";
     resultField.classList.remove("green");
     resultField.classList.remove("red");
     resultField.classList.add("yellow");
@@ -72,24 +73,35 @@ const dbResponse = async (input) => {
     serverResponse !== undefined &&
     typeof serverResponse === "object"
   ) {
-    resultField.innerText += "  and points to a " + serverResponse.type;
+    resultField.innerText =
+      "The input is a valid url and points to a " + serverResponse.type;
+    resultField.classList.remove("yellow");
+    resultField.classList.remove("red");
+    resultField.classList.add("green");
   }
 };
 
 const throttledDbResponse = throttle(dbResponse, 2000);
 
 const queryServer = async (input) => {
+  await sleep(2500);
   let result = false;
-  await fetch("./db.json")
-    .then((response) => response.json())
-    .then((data) => {
-      data.urls.forEach((el) => {
-        if (el.url === input) {
-          result = el;
-        }
-      });
+  try {
+    const response = await fetch("./db.json");
+    const data = await response.json();
+    data.urls.forEach((el) => {
+      if (el.url === input) {
+        result = el;
+      }
     });
-  const now = new Date();
-  console.log("server called at " + now);
+    const now = new Date();
+    console.log("server called at " + now);
+  } catch (err) {
+    console.log("error: ", err);
+  }
   return result;
 };
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
