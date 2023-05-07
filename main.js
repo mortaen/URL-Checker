@@ -84,10 +84,11 @@ const dbResponse = async (input) => {
 const throttledDbResponse = throttle(dbResponse, 2000);
 
 const queryServer = async (input) => {
-  await sleep(2500);
   let result = false;
   try {
+    toggleLoadingSpinner();
     const response = await fetch("./db.json");
+    await sleep(2500);
     const data = await response.json();
     data.urls.forEach((el) => {
       if (el.url === input) {
@@ -99,9 +100,14 @@ const queryServer = async (input) => {
   } catch (err) {
     console.log("error: ", err);
   }
+  toggleLoadingSpinner();
   return result;
 };
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+const toggleLoadingSpinner = () => {
+  document.querySelector("#loading-spinner").classList.toggle("d-none");
+};
